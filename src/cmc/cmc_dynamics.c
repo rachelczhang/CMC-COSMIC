@@ -272,7 +272,7 @@ are skipped if they already interacted in 3bb loop!  */
 			// rperi = XBB * (binary[star[k].binind].a + binary[star[kp].binind].a);
                         rperi = MAX((10.0 * (1+binary[star[k].binind].e) * pow(((binary[star[k].binind].bse_mass[0] + binary[star[k].binind].bse_mass[1]) + (binary[star[kp].binind].bse_mass[0] + binary[star[kp].binind].bse_mass[1])) / ((binary[star[k].binind].bse_mass[0] + binary[star[k].binind].bse_mass[1])), (1.0/3)) * binary[star[k].binind].a), (10.0 * (1+binary[star[kp].binind].e) * pow(((binary[star[kp].binind].bse_mass[0] + binary[star[kp].binind].bse_mass[1]) + (binary[star[k].binind].bse_mass[0] + binary[star[k].binind].bse_mass[1])) / ((binary[star[kp].binind].bse_mass[0] + binary[star[kp].binind].bse_mass[1])), (1.0/3)) * binary[star[kp].binind].a));
                         rperi_original = XBB * (binary[star[k].binind].a + binary[star[kp].binind].a);
-			isBinBinEncounter = 1
+			isBinBinEncounter = 1;
                         if (BINBIN) {
 				S = PI * sqr(rperi) * (1.0 + 2.0*madhoc*(mass_k+mass_kp)/(rperi*sqr(W)));
                                 S_original = PI * sqr(rperi_original) * (1.0 + 2.0*madhoc*(mass_k+mass_kp)/(rperi_original*sqr(W)));
@@ -291,8 +291,11 @@ are skipped if they already interacted in 3bb loop!  */
 			/* binary--single cross section */
 			// rperi = XBS * binary[star[kbin].binind].a;
 			rperi = 10.0 * (1+binary[star[kbin].binind].e) * pow(((binary[star[kbin].binind].bse_mass[0] + binary[star[kbin].binind].bse_mass[1]) + star_m[get_global_idx(ksin)]) / ((binary[star[kbin].binind].bse_mass[0] + binary[star[kbin].binind].bse_mass[1])), (1.0/3)) * binary[star[kbin].binind].a;
-			rperi_original = XBS * binary[star[kbin].binind].a;
-                                                
+			rperi_original = 2.1 * pow(((binary[star[kbin].binind].bse_mass[0] + binary[star[kbin].binind].bse_mass[1]) + star_m[get_global_idx(ksin)]) / ((binary[star[kbin].binind].bse_mass[0] + binary[star[kbin].binind].bse_mass[1])), (1.0/3)) * binary[star[kbin].binind].a;
+			// rperi_original = XBS * binary[star[kbin].binind].a;
+            if (rperi_original > rperi) {
+				printf("HELLO1 RPERI MESSED UP");
+			}                                    
 
 			// printf("xbs: %f\n", XBS);
 			// printf("ping: rperi: %f, rperi_orig: %f\n", rperi, rperi_original);
@@ -310,6 +313,9 @@ are skipped if they already interacted in 3bb loop!  */
 			if (BINSINGLE) {
 				S = PI * sqr(rperi) * (1.0 + 2.0*madhoc*(mass_k+mass_kp)/(rperi*sqr(W)));
 				S_original = PI * sqr(rperi_original) * (1.0 + 2.0*madhoc*(mass_k+mass_kp)/(rperi_original*sqr(W)));
+				if (S_original > S) {
+					printf("HELLO2 S MESSED UP");
+			} 
 			} else {
 				S = 0.0;
 			}
@@ -439,7 +445,9 @@ are skipped if they already interacted in 3bb loop!  */
 		/* should it be n_local here even for binaries? */
 		P_enc = n_local * W * S * (dt * ((double) clus.N_STAR)/log(GAMMA*((double) clus.N_STAR)));
 		P_enc_original = n_local * W * S_original * (dt * ((double) clus.N_STAR)/log(GAMMA*((double) clus.N_STAR)));
-
+		if (P_enc_original > P_enc && isBinSingleEncounter == 1) {
+				printf("HELLO3 PENC MESSED UP");
+		}
 		
 		/* warn if something went wrong with the calculation of Dt */
 		if (P_enc >= 1.0) {
@@ -447,7 +455,7 @@ are skipped if they already interacted in 3bb loop!  */
 		}
 
 		rng_result = rng_t113_dbl_new(curr_st);
-
+	
 		if (!(rng_result < P_enc_original) && rng_result < P_enc && isBinSingleEncounter == 1) {
 			printf("PING WOULD HAVE CALLED");
 			printf("*#*#*#*#*#*#*#*#*#*#*#*#*#*#\n");
@@ -493,7 +501,7 @@ are skipped if they already interacted in 3bb loop!  */
 			if (star[k].binind > 0 && star[kp].binind > 0) {
 				/* binary--binary */
 				print_interaction_status("BB");
-				binint_do(k, kp, rperi, w, W, rcm, vcm, rng, exceptionOccurred);
+				binint_do(k, kp, rperi, w, W, rcm, vcm, rng, 0);
 				/* parafprintf(collisionfile, "BB %g %g\n", TotalTime, rcm); */
 			} else if (star[k].binind > 0 || star[kp].binind > 0) {
 				/* binary--single */
