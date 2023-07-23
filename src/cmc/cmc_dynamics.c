@@ -283,7 +283,7 @@ are skipped if they already interacted in 3bb loop!  */
 			}
 
 			/* binary--single cross section */
-			rperi = 2.1 * pow(((binary[star[kbin].binind].bse_mass[0] + binary[star[kbin].binind].bse_mass[1]) + star_m[get_global_idx(ksin)]) / ((binary[star[kbin].binind].bse_mass[0] + binary[star[kbin].binind].bse_mass[1])), (1/3)) * binary[star[kbin].binind].a;
+			rperi = 3.0 * (1+binary[star[kbin].binind].e) * pow(((binary[star[kbin].binind].bse_mass[0] + binary[star[kbin].binind].bse_mass[1]) + star_m[get_global_idx(ksin)]) / ((binary[star[kbin].binind].bse_mass[0] + binary[star[kbin].binind].bse_mass[1])), (1/3)) * binary[star[kbin].binind].a;
 			rperi_original = XBS * binary[star[kbin].binind].a;
 			isBinSingleCollision = 1;
 			if (BINSINGLE) {
