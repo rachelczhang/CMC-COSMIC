@@ -1360,6 +1360,9 @@ void central_calculate(void)
 	central.a_ave = 0.0;
 	central.a2_ave = 0.0;
 	central.ma_ave = 0.0;
+	central.m_sin_max = 0.0;
+	central.m_bin_max = 0.0;
+
 
 		//MPI: In the case when the central stars dont all lie in the root node, this just cant be done only by the root node. But assuming that case will never happen, we'll just throw an error for such cases.
 	for (i=1; i<=MIN(NUM_CENTRAL_STARS, clus.N_STAR); i++) {
@@ -1381,13 +1384,14 @@ void central_calculate(void)
 			if (star[i].binind == 0) {
 				central.N_sin++;
 				Msincentral += star_m[j] / ((double) clus.N_STAR);
+				central.m_sin_max = MAX(central.m_sin_max, star_m[j] / ((double) clus.N_STAR));
 				central.v_sin_rms += sqr(star[i].vr) + sqr(star[i].vt);
 				central.R2_ave += sqr(star[i].rad);
 				central.mR_ave += star_m[j] / ((double) clus.N_STAR) * star[i].rad;
 			} else {
 				central.N_bin++;
-
 				Mbincentral += star_m[j] / ((double) clus.N_STAR);
+				central.m_bin_max = MAX(central.m_bin_max, star_m[j] / ((double) clus.N_STAR));
 				central.v_bin_rms += sqr(star[i].vr) + sqr(star[i].vt);
 				central.a_ave += binary[star[i].binind].a;
 				central.a2_ave += sqr(binary[star[i].binind].a);
@@ -1395,6 +1399,9 @@ void central_calculate(void)
 			}
 		}
 	}
+
+	printf("RCZ: max single mass in cmc utils file: ", central.m_sin_max);
+	printf("RCZ: max binary mass in cmc utils file: ", central.m_bin_max); 
 
 	tmpTimeStart = timeStartSimple();
 	//MPI: Packing into array to optimize communication.

@@ -1558,6 +1558,15 @@ typedef struct{
 * @brief  average of m*a for binaries
 */
 	double ma_ave;
+/**
+* @brief  maximum single star mass
+*/
+	double m_sin_max;
+/**
+* @brief  maximum binary star mass
+*/
+	double m_bin_max;
+
 } central_t;
 
 /* useful structure for core quantities */
