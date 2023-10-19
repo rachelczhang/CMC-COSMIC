@@ -276,7 +276,6 @@ orbit_rs_t calc_orbit_rs(long si, double E, double J)
 double get_Tbb(central_t central) {
   double Tbb;
   /* X defines pericenter needed for "strong" interaction: r_p = X (a_1+a_2) */	
-  printf("RCZ: max binary mass in cmc evolution thr file: ", central.m_bin_max); 
   if (central.N_bin != 0) {
     Tbb = 1.0 / (16.0 * sqrt(PI) * central.n_bin * sqr(XBB) * (central.v_bin_rms/sqrt(3.0)) * central.a2_ave * 
         (1.0 + central.ma_ave/(2.0*XBB*sqr(central.v_bin_rms/sqrt(3.0))*central.a2_ave))) * 
@@ -297,7 +296,6 @@ double get_Tbb(central_t central) {
 double get_Tbs(central_t central) {
   double Tbs;
   /* X defines pericenter needed for "strong" interaction: r_p = X a */
-  printf("RCZ: max single mass in cmc evolution thr file: ", central.m_sin_max);
   if (central.N_bin != 0 && central.N_sin != 0) {
     Tbs = 1.0 / (4.0 * sqrt(PI) * central.n_sin * sqr(XBS) * (central.v_rms/sqrt(3.0)) * central.a2_ave * 
         (1.0 + central.m_ave*central.a_ave/(XBS*sqr(central.v_rms/sqrt(3.0))*central.a2_ave))) * 
@@ -321,9 +319,8 @@ double GetTimeStep(gsl_rng *rng) {
                Tse, DTse, Trejuv, DTrejuv, xcoll;
 	central_t central_hard;
 
-	printf("RCZ: CENTRAL IS THIS", central)
-
-	printf("RCZ: CENTRAL BIN MAX MASS IS THIS", central.m_bin_max)
+	printf("RCZ: max single mass in cmc evolution thr file: %f\n", central.m_sin_max);
+	printf("RCZ: max binary mass in cmc evolution thr file: %f\n", central.m_bin_max); 
 
 	/* calculate the relaxation timestep */
 	if (RELAXATION || FORCE_RLX_STEP) {
@@ -383,8 +380,6 @@ double GetTimeStep(gsl_rng *rng) {
     }
     else
     {
-
-		printf("RCZ: NOT DT HARD BINARIES");
         /* calculate DTbb, using a generalization of the expression for Tcoll */
         if (BINBIN) {
             Tbb= get_Tbb(central);

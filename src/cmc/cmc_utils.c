@@ -1384,6 +1384,7 @@ void central_calculate(void)
 			if (star[i].binind == 0) {
 				central.N_sin++;
 				Msincentral += star_m[j] / ((double) clus.N_STAR);
+				printf("RCZ: indivdual single masses: %f\n", star_m[j] / ((double) clus.N_STAR));
 				central.m_sin_max = MAX(central.m_sin_max, star_m[j] / ((double) clus.N_STAR));
 				central.v_sin_rms += sqr(star[i].vr) + sqr(star[i].vt);
 				central.R2_ave += sqr(star[i].rad);
@@ -1400,8 +1401,8 @@ void central_calculate(void)
 		}
 	}
 
-	printf("RCZ: max single mass in cmc utils file: ", central.m_sin_max);
-	printf("RCZ: max binary mass in cmc utils file: ", central.m_bin_max); 
+	printf("RCZ: max single mass in cmc utils file: %f\n", central.m_sin_max);
+	printf("RCZ: max binary mass in cmc utils file: %f\n", central.m_bin_max); 
 
 	tmpTimeStart = timeStartSimple();
 	//MPI: Packing into array to optimize communication.
