@@ -319,9 +319,6 @@ double GetTimeStep(gsl_rng *rng) {
                Tse, DTse, Trejuv, DTrejuv, xcoll;
 	central_t central_hard;
 
-	printf("RCZ: max single mass in cmc evolution thr file: %f\n", central.m_sin_max);
-	printf("RCZ: max binary mass in cmc evolution thr file: %f\n", central.m_bin_max); 
-
 	/* calculate the relaxation timestep */
 	if (RELAXATION || FORCE_RLX_STEP) {
 		//Optimize simul_relax() later 

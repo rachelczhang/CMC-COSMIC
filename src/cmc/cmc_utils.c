@@ -1363,9 +1363,9 @@ void central_calculate(void)
 	central.m_sin_max = 0.0;
 	central.m_bin_max = 0.0;
 
-
 		//MPI: In the case when the central stars dont all lie in the root node, this just cant be done only by the root node. But assuming that case will never happen, we'll just throw an error for such cases.
 	for (i=1; i<=MIN(NUM_CENTRAL_STARS, clus.N_STAR); i++) {
+		
 		if(NUM_CENTRAL_STARS > End[0] - Start[0]) 
 		{
 			eprintf("Central stars dont fit in root node!\n");
@@ -1384,7 +1384,6 @@ void central_calculate(void)
 			if (star[i].binind == 0) {
 				central.N_sin++;
 				Msincentral += star_m[j] / ((double) clus.N_STAR);
-				printf("RCZ: indivdual single masses: %f\n", star_m[j] / ((double) clus.N_STAR));
 				central.m_sin_max = MAX(central.m_sin_max, star_m[j] / ((double) clus.N_STAR));
 				central.v_sin_rms += sqr(star[i].vr) + sqr(star[i].vt);
 				central.R2_ave += sqr(star[i].rad);
@@ -1401,12 +1400,9 @@ void central_calculate(void)
 		}
 	}
 
-	printf("RCZ: max single mass in cmc utils file: %f\n", central.m_sin_max);
-	printf("RCZ: max binary mass in cmc utils file: %f\n", central.m_bin_max); 
-
 	tmpTimeStart = timeStartSimple();
 	//MPI: Packing into array to optimize communication.
-	double *buf_bcast_dbl = (double*) malloc(10 * sizeof(double));
+	double *buf_bcast_dbl = (double*) malloc(12 * sizeof(double));
 	buf_bcast_dbl[0] = central.w2_ave;
 	buf_bcast_dbl[1] = Msincentral;
 	buf_bcast_dbl[2] = central.mR_ave;
@@ -1417,8 +1413,10 @@ void central_calculate(void)
 	buf_bcast_dbl[7] = central.v_sin_rms;
 	buf_bcast_dbl[8] = central.v_bin_rms;
 	buf_bcast_dbl[9] = central.R2_ave;
+	buf_bcast_dbl[10] = central.m_sin_max;
+	buf_bcast_dbl[11] = central.m_bin_max;
 
-	MPI_Bcast( buf_bcast_dbl, 10, MPI_DOUBLE, 0, MPI_COMM_WORLD );
+	MPI_Bcast( buf_bcast_dbl, 12, MPI_DOUBLE, 0, MPI_COMM_WORLD );
 
 	central.w2_ave = buf_bcast_dbl[0];
 	Msincentral = buf_bcast_dbl[1];
@@ -1430,8 +1428,11 @@ void central_calculate(void)
 	central.v_sin_rms = buf_bcast_dbl[7];
 	central.v_bin_rms = buf_bcast_dbl[8];
 	central.R2_ave = buf_bcast_dbl[9];
-	free(buf_bcast_dbl);
-	
+	central.m_sin_max = buf_bcast_dbl[10];
+	central.m_bin_max = buf_bcast_dbl[11];
+
+	free(buf_bcast_dbl); 
+
 	long *buf_bcast_long = (long*) malloc(3 * sizeof(long));
 	buf_bcast_long[0] = Ncentral;
 	buf_bcast_long[1] = central.N_sin;
