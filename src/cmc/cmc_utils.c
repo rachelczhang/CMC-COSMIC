@@ -484,6 +484,7 @@ long CheckStop() {
 	}
 
 	if (TotalTime >= T_MAX) {
+		fprintf(stderr, "TOTAL TIME FINISHED, ABOUT TO PRINT FINAL SNAPSHOT");
 		print_2Dsnapshot();
 		diaprintf("TotalTime > T_MAX ... Terminating.\n");
 		return (1);
@@ -1365,6 +1366,7 @@ void central_calculate(void)
 	for (i=1; i<=MIN(NUM_CENTRAL_STARS, clus.N_STAR); i++) {
 		if(NUM_CENTRAL_STARS > End[0] - Start[0]) 
 		{
+			fprintf(stderr, "ERROR: NUM CENTRAL STARS: %d, END - START: %d ", NUM_CENTRAL_STARS, End[0] - Start[0]);
 			eprintf("Central stars dont fit in root node!\n");
 			MPI_Abort(MPI_COMM_WORLD, -1);
 		}
@@ -1372,7 +1374,7 @@ void central_calculate(void)
 		if(myid==0)
 		{
 			Ncentral++;
-
+		
 			j = get_global_idx(i);
 
 		/* use only code units here, so always divide star[].m by clus.N_STAR */

@@ -934,6 +934,9 @@ void handle_bse_outcome(long k, long kb, double *vs, double tphysf, int kprev0, 
       star[knewp].id, star_m[get_global_idx(knewp)] * units.mstar / FB_CONST_MSUN,
 		star_r[get_global_idx(k)], kprev0, kprev1, binary[kb].rad1 * units.l / RSUN, binary[kb].rad2 * units.l / RSUN);
 
+
+		fprintf(stderr, "ACF STAR REMOVED ping40 index=%ld id=%ld\n", k, star[k].id);
+
     destroy_obj(k);
     /* in this case vs is relative speed between stars at infinity */
 /*    star[knew].vr += star[knewp].m/(star[knew].m+star[knewp].m) * vs[2] * 1.0e5 / (units.l/units.t);
@@ -1054,8 +1057,12 @@ void handle_bse_outcome(long k, long kb, double *vs, double tphysf, int kprev0, 
       star[knew].id, star[knew].se_mt,
       binary[kb].id1, binary[kb].m1 * units.mstar / FB_CONST_MSUN,
       binary[kb].id2, binary[kb].m2 * units.mstar / FB_CONST_MSUN,
-		star_r[get_global_idx(k)], star[knew].se_k, kprev0, kprev1,
-		star[knew].rad * units.l/ RSUN, binary[kb].rad1 * units.l / RSUN,binary[kb].rad2 * units.l / RSUN);
+		  star_r[get_global_idx(k)], star[knew].se_k, kprev0, kprev1,
+		  star[knew].rad * units.l/ RSUN, binary[kb].rad1 * units.l / RSUN,binary[kb].rad2 * units.l / RSUN);
+		
+    fprintf(stderr, "ACF STAR REMOVED ping41 index=%ld id=%ld\n", k, star[k].id);
+
+
     destroy_obj(k);
     if (sqrt(vs[1]*vs[1]+vs[2]*vs[2]+vs[3]*vs[3]) != 0.0) {
       //dprintf("birth kick of %f km/s\n", sqrt(vs[0]*vs[0]+vs[1]*vs[1]+vs[2]*vs[2]));
@@ -1147,8 +1154,12 @@ void handle_bse_outcome(long k, long kb, double *vs, double tphysf, int kprev0, 
       star[knew].id, star[knew].se_mt,
       binary[kb].id1, binary[kb].m1 * units.mstar / FB_CONST_MSUN,
       binary[kb].id2, binary[kb].m2 * units.mstar / FB_CONST_MSUN,
-		star_r[get_global_idx(k)], star[knew].se_k, kprev0, kprev1,
-		star[knew].rad * units.l / RSUN, binary[kb].rad1 * units.l / RSUN, binary[kb].rad2 * units.l / RSUN);
+	star_r[get_global_idx(k)], star[knew].se_k, kprev0, kprev1,
+	star[knew].rad * units.l / RSUN, binary[kb].rad1 * units.l / RSUN, binary[kb].rad2 * units.l / RSUN);
+
+
+
+		fprintf(stderr, "ACF STAR REMOVED ping42 index=%ld id=%ld\n", k, star[k].id);
 
     destroy_obj(k);
     if (sqrt(vs[1]*vs[1]+vs[2]*vs[2]+vs[3]*vs[3]) != 0.0) {

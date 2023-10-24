@@ -74,6 +74,7 @@ void print_2Dsnapshot(void)
 	j=0;
 	char outfile[100];
         char tablename[20];
+	fprintf(stderr, "PRINTING SNAPSHOT: %d\n", snap_num);
 	if (SNAPSHOTTING) {
 		// open file for 2D snapshot 
 	        sprintf(outfile, "%s.snapshots.h5", outprefix);
@@ -3110,6 +3111,8 @@ void write_snapshot(char *filename, int bh_only, char *tablename) {
                 MPI_Barrier(MPI_COMM_WORLD);
         }
 
+	fprintf(stderr, "***********************************ACF ABOUT TO WRITE SNAPSHOT WITH NAME %s*************************************\n", tablename);
+	// fprintf(stderr, "**************************ACF PINGSTARSIZE: %d\n", sizeof(star));
 	//Serializing the snapshot printing.
 	for(k=0; k<procs; k++)
 	{
@@ -3136,6 +3139,11 @@ void write_snapshot(char *filename, int bh_only, char *tablename) {
 				//if bh_only>0, print only BHs
 				if( (bh_only==0) || ( (bh_only!=0) && (star[i].se_k==14 || binary[j].bse_kw[0]==14 || binary[j].bse_kw[1]==14) ) )
 				{
+					if (j) {
+						fprintf(stderr, "PING ABOUT TO SERIALIZE OBJECT BINARY with index %ld and PINGID=%ld, id0=%ld, id1=%ld in snapshot %s\n", i, star[i].id, binary[j].id1, binary[j].id2, tablename);
+					} else {
+						fprintf(stderr, "PING ABOUT TO SERIALIZE OBJECT SINGLE with index %ld and PINGID=%ld in snapshot %s\n", i, star[i].id, tablename);
+					}
                                         all_objects[k].id = star[i].id;
                                         all_objects[k].m = m * (units.m / clus.N_STAR) / MSUN;
                                         all_objects[k].r = r;

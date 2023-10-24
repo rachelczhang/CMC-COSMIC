@@ -424,8 +424,8 @@ are skipped if they already interacted in 3bb loop!  */
 				/* parafprintf(collisionfile, "BB %g %g\n", TotalTime, rcm); */
 			} else if (star[k].binind > 0 || star[kp].binind > 0) {
 				/* binary--single */
+				
 				print_interaction_status("BS");
-
 				binint_do(k, kp, rperi, w, W, rcm, vcm, rng);
 				/* parafprintf(collisionfile, "BS %g %g\n", TotalTime, rcm); */
 			} else {

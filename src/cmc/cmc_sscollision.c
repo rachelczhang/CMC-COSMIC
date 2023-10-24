@@ -145,7 +145,7 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
 			        /* log stuff */
 			        parafprintf(tidalcapturefile, "%s\n", sprint_star_dyn(kp, dummystring));
                                 //parafprintf(tidalcapturefile, "coll_CE_debug %.3g %.3g %.3g %.3g %.3g\n", mass_kp*madhoc, mass_k*madhoc, star[kp].se_mc*MSUN/units.m, star[kp].se_radius*RSUN/units.l, W);
-
+					fprintf(stderr, "ACF STAR REMOVED ping10 index=%ld id=%ld\n", k, star[k].id);
 			        destroy_obj(k);
 		        } else {
 			        /* form compact binary with stripped RG core*/
@@ -198,7 +198,8 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
                                         star[k].rad*units.l/RSUN, star[kp].rad*units.l/RSUN);
                         
                                 //parafprintf(tidalcapturefile, "coll_CE_debug %.3g %.3g %.3g %.3g %.3g\n", mass_kp*madhoc, mass_k*madhoc, star[kp].se_mc*MSUN/units.m, star[kp].se_radius*RSUN/units.l, W);
-
+					fprintf(stderr, "ACF STAR REMOVED ping11 index=%ld id=%ld\n", k, star[k].id);
+					fprintf(stderr, "ACF STAR REMOVED ping12 index=%ld id=%ld\n", kp, star[kp].id);
 			        destroy_obj(k);
 			        destroy_obj(kp);
                         }
@@ -285,6 +286,9 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
 				    star[k].rad*units.l/RSUN, star[kp].rad*units.l/RSUN,rho0_c,rho1_c,rho0_env, rho1_env, star[k].se_k, star[kp].se_k,
 				    star[knew].id, star_m[get_global_idx(knew)] * units.mstar / FB_CONST_MSUN, star[knew].rad*units.l/RSUN, rhor_c, 				             rhor_env, star[knew].se_k, W*units.l/units.t/1.e5, rperi*units.l/RSUN);
                         /* destroy two progenitors */
+						fprintf(stderr, "ACF STAR REMOVED ping13 progenitors again?? index=%ld id=%ld\n", k, star[k].id);
+
+						fprintf(stderr, "ACF STAR REMOVED ping14 progenitors again?? index=%ld id=%ld\n", kp, star[kp].id);
                         destroy_obj(k);
                         destroy_obj(kp);
                 }   
@@ -356,6 +360,9 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
 			        parafprintf(tidalcapturefile, "%s\n", sprint_star_dyn(k, dummystring));
                                 //parafprintf(tidalcapturefile, "coll_CE_debug %.3g %.3g %.3g %.3g %.3g\n", mass_k*madhoc, mass_kp*madhoc, star[k].se_mc*MSUN/units.m, star[k].se_radius*RSUN/units.l, W);
 
+
+
+						fprintf(stderr, "ACF STAR REMOVED ping15 progenitors again?? index=%ld id=%ld\n", kp, star[kp].id);
 			        destroy_obj(kp);
 		        } else {
 			        /* form compact binary with stripped RG core*/
@@ -407,6 +414,11 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
                                         star[k].rad*units.l/RSUN, star[kp].rad*units.l/RSUN);
                                 //parafprintf(tidalcapturefile, "coll_CE_debug %.3g %.3g %.3g %.3g %.3g\n", mass_k*madhoc, mass_kp*madhoc, star[k].se_mc*MSUN/units.m, star[k].se_radius*RSUN/units.l, W);
 
+
+
+					fprintf(stderr, "ACF STAR REMOVED ping16 index=%ld id=%ld\n", k, star[k].id);
+
+					fprintf(stderr, "ACF STAR REMOVED ping17 index=%ld id=%ld\n", kp, star[kp].id);
 			        destroy_obj(k);
 			        destroy_obj(kp);
                         }
@@ -491,6 +503,9 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
 				    star[knew].id, star_m[get_global_idx(knew)] * units.mstar / FB_CONST_MSUN, star[knew].rad*units.l/RSUN, rhor_c, 					    rhor_env, star[knew].se_k, W*units.l/units.t/1.e5, rperi*units.l/RSUN);
 
                         /* destroy two progenitors */
+						fprintf(stderr, "ACF STAR REMOVED ping21 index=%ld id=%ld\n", k, star[k].id);
+						fprintf(stderr, "ACF STAR REMOVED ping22 index=%ld id=%ld\n", kp, star[kp].id);
+
                         destroy_obj(k);
                         destroy_obj(kp);
 		}
@@ -587,6 +602,8 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
 
                         //parafprintf(tidalcapturefile, "coll_CE_debug %.3g %.3g %.3g %.3g %.3g\n", mass_kp*madhoc, mass_k*madhoc, star[kp].se_mc*MSUN/units.m, star[kp].se_radius*RSUN/units.l, W);
                 
+						fprintf(stderr, "ACF STAR REMOVED ping19 index=%ld id=%ld\n", k, star[k].id);
+						fprintf(stderr, "ACF STAR REMOVED ping20 index=%ld id=%ld\n", kp, star[kp].id);
                         destroy_obj(k);
                         destroy_obj(kp);
 
@@ -671,6 +688,9 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
 				    star[knew].id, star_m[get_global_idx(knew)] * units.mstar / FB_CONST_MSUN, star[knew].rad*units.l/RSUN, rhor_c, rhor_env, star[knew].se_k, W*units.l/units.t/1.e5, rperi*units.l/RSUN);
 
                         /* destroy two progenitors */
+
+						fprintf(stderr, "ACF STAR REMOVED ping23 index=%ld id=%ld\n", k, star[k].id);
+						fprintf(stderr, "ACF STAR REMOVED ping24 index=%ld id=%ld\n", kp, star[kp].id);
                         destroy_obj(k);
                         destroy_obj(kp);
                 }
@@ -746,6 +766,9 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
 		/* log stuff */
 		parafprintf(tidalcapturefile, "%s\n", sprint_bin_dyn(knew, dummystring));
 
+		fprintf(stderr, "ACF STAR REMOVED ping25 index=%ld id=%ld\n", k, star[k].id);
+		fprintf(stderr, "ACF STAR REMOVED ping26 index=%ld id=%ld\n", kp, star[kp].id);
+
 		destroy_obj(k);
 		destroy_obj(kp);
 
@@ -810,6 +833,10 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
                 /* log stuff */
                 parafprintf(tidalcapturefile, "%s+(%g,%g)\n", sprint_bin_dyn(knew, dummystring), 
                                 star[k].rad*units.l/RSUN, star[kp].rad*units.l/RSUN);
+
+
+				fprintf(stderr, "ACF STAR REMOVED ping27 index=%ld id=%ld\n", k, star[k].id);
+				fprintf(stderr, "ACF STAR REMOVED ping28 index=%ld id=%ld\n", kp, star[kp].id);
 
                 destroy_obj(k);
                 destroy_obj(kp); 
@@ -894,6 +921,10 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
 				    star[knew].id, star_m[get_global_idx(knew)] * units.mstar / FB_CONST_MSUN, star[knew].rad*units.l/RSUN, rhor_c, 					    rhor_env, star[knew].se_k, W*units.l/units.t/1.e5, rperi*units.l/RSUN);
 
                 /* destroy two progenitors */
+
+
+						fprintf(stderr, "ACF STAR REMOVED ping29 index=%ld id=%ld\n", k, star[k].id);
+		fprintf(stderr, "ACF STAR REMOVED ping30 index=%ld id=%ld\n", kp, star[kp].id);
                 destroy_obj(k);
                 destroy_obj(kp);
 
@@ -1022,6 +1053,10 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
 				    star[knew].id, star_m[get_global_idx(knew)] * units.mstar / FB_CONST_MSUN, star[knew].rad*units.l/RSUN, rhor_c, 					    rhor_env, star[knew].se_k, W*units.l/units.t/1.e5, rperi*units.l/RSUN);
 
                                 /* destroy two progenitors */
+
+
+										fprintf(stderr, "ACF STAR REMOVED ping31 index=%ld id=%ld\n", k, star[k].id);
+		fprintf(stderr, "ACF STAR REMOVED ping32 index=%ld id=%ld\n", kp, star[kp].id);
                                 destroy_obj(k);
                                 destroy_obj(kp);
 
@@ -1083,6 +1118,10 @@ void sscollision_do(long k, long kp, double rperimax, double w[4], double W, dou
                                         star[k].rad*units.l/RSUN, star[kp].rad*units.l/RSUN, rperi*units.l/RSUN, 
                                         W*units.l/units.t/1.e5, rcm*units.l/PARSEC, 
                                         sprint_bin_dyn(knew, dummystring3), star[k].rad*units.l/RSUN, star[kp].rad*units.l/RSUN);
+
+
+							fprintf(stderr, "ACF STAR REMOVED ping33 index=%ld id=%ld\n", k, star[k].id);
+		fprintf(stderr, "ACF STAR REMOVED ping34 index=%ld id=%ld\n", kp, star[kp].id);
 			
 			        destroy_obj(k);
 			        destroy_obj(kp);
@@ -1641,6 +1680,7 @@ void merge_two_stars(star_t *star1, star_t *star2, star_t *merged_star, double *
 		  merged_star->m = merged_star->se_mt * MSUN / units.mstar;
 		} else {
 		  // remove the damn thing, how is this getting here anyway?
+		  fprintf(stderr, "ACF wtf shouldn't happen");
 		  dprintf("In merge_two_stars: attempted to merge something not a binary! So skipping merging\n");
 		  dprintf("Some info on skipped system: id1=%ld id2=%ld mass1=%g mass2=%g kw1=%d kw2=%d", tempbinary.id1,tempbinary.id2,tempbinary.bse_mass[0],tempbinary.bse_mass[1],tempbinary.bse_kw[0],tempbinary.bse_kw[1]);
 		  //call destroy_obj(i) here (where i = k, star[k]... )? Or call zero out? Probably should update the system somehow, then we can check if it should be removed where the call to merge_two_stars was made from...

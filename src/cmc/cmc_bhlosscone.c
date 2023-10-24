@@ -146,6 +146,7 @@ void bh_rand_walk(long index, double v[4], double vcm[4], double beta, double dt
 			//changes by virtue of the fact that you're increasing the SMBH mass.  It's possible we're double counting here.  
 			cenma.E_new +=  (2.0*star_phi[g_index] + star[index].vr * star[index].vr + star[index].vt * star[index].vt) / 
 				2.0 * star_m[g_index] * madhoc;
+			fprintf(stderr, "ACF STAR REMOVED index=%d, id=%ld: star eaten by BH\n", g_index, star[index].id);
 			destroy_obj(index);
 			L2 = 0.0; 
 		} else { 
