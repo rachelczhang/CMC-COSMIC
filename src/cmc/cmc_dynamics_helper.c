@@ -662,6 +662,8 @@ void make_threebodybinary(double P_3bb, long k1, long k2, long k3, long form_bin
 
 		// destroy the two former single stars (which have now formed a binary)
 		// leave the remaining single star (properties have already been updated)
+		fprintf(stderr, "ACF STAR REMOVED because merged into binary index=%ld id=%ld\n", k1, star[k1].id);
+		fprintf(stderr, "ACF STAR REMOVED because merged into binary index=%ld id=%ld\n", k2, star[k2].id);
 		parafprintf(threebbfile, "%.16g %ld %ld %ld %ld %ld %ld %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %ld\n", TotalTime, k1, k2, k3, star[k1].id, star[k2].id, star[k3].id, m1*(units.m / clus.N_STAR / MSUN), m2*(units.m / clus.N_STAR / MSUN), m3*(units.m / clus.N_STAR / MSUN), ave_local_mass, n_local, sigma_local, eta, Eb, binary[star[knew].binind].e, binary[star[knew].binind].a * units.l / AU, r_p * units.l / AU, star_r[get_global_idx(knew)], r3, star[knew].vr, star[knew].vt, star[k3].vr, star[k3].vt, star_phi[get_global_idx(knew)], star_phi[get_global_idx(k3)], delta_PE, delta_KE, delta_E, delta_E_3bb, N3bbformed);
 		destroy_obj(k1);
 		destroy_obj(k2);
@@ -1381,8 +1383,12 @@ void binint_do(long k, long kp, double rperi, double w[4], double W, double rcm,
 	double vs[20], VK0;
 	double energy_from_outer=0.;
 
+	fprintf(stderr, "ping1");
+
 	/* perform actions that are specific to the type of binary interaction */
 	if (star[k].binind != 0 && star[kp].binind != 0) {
+
+		fprintf(stderr, "ping2");
 		/* binary-binary */
 		isbinbin = 1;
 		N_bb++;
@@ -1395,10 +1401,16 @@ void binint_do(long k, long kp, double rperi, double w[4], double W, double rcm,
 			+ binary[jbinp].m1 * binary[jbinp].m2 * sqr(madhoc) / (2.0 * binary[jbinp].a)
 			- binary[jbin].Eint1 - binary[jbin].Eint2
 			- binary[jbinp].Eint1 - binary[jbinp].Eint2;
+
+		
+		fprintf(stderr, "ping2");
 		
 		cmc_units.v = sqrt((star_m[get_global_idx(k)]+star_m[get_global_idx(kp)])/(star_m[get_global_idx(k)]*star_m[get_global_idx(kp)]) * 
 				   (binary[jbin].m1*binary[jbin].m2/binary[jbin].a + 
 				    binary[jbinp].m1*binary[jbinp].m2/binary[jbinp].a) * madhoc);
+
+		
+		fprintf(stderr, "ping3");
 		cmc_units.l = binary[jbin].a + binary[jbinp].a;
 		cmc_units.t = cmc_units.l / cmc_units.v;
 		cmc_units.m = cmc_units.l * sqr(cmc_units.v);
@@ -1410,6 +1422,8 @@ void binint_do(long k, long kp, double rperi, double w[4], double W, double rcm,
 		N_bs++;
 		hier.nstarinit = 3;
 
+		fprintf(stderr, "ping4");
+
 		if (star[k].binind == 0) {
 			ksin = k;
 			kbin = kp;
@@ -1419,6 +1433,8 @@ void binint_do(long k, long kp, double rperi, double w[4], double W, double rcm,
 			kbin = k;
 			jbin = star[k].binind;
 		}
+
+		fprintf(stderr, "ping5");
 
 		BEi = binary[jbin].m1 * binary[jbin].m2 * sqr(madhoc) / (2.0 * binary[jbin].a)
 			- binary[jbin].Eint1 - binary[jbin].Eint2 - star[ksin].Eint;
@@ -1434,6 +1450,8 @@ void binint_do(long k, long kp, double rperi, double w[4], double W, double rcm,
 		exit_cleanly(1, __FUNCTION__);
 		exit(1);
 	}
+
+	fprintf(stderr, "ping6");
 	
 	/* malloc hier (based on value of hier.nstarinit) */
 	fb_malloc_hier(&hier);
@@ -1441,12 +1459,16 @@ void binint_do(long k, long kp, double rperi, double w[4], double W, double rcm,
 	t=0;
 	bmax = rperi * sqrt(1.0 + 2.0 * ((star_m[get_global_idx(k)] + star_m[get_global_idx(kp)]) * madhoc) / (rperi * sqr(W)));
 
+	fprintf(stderr, "ping7");
+
 	/* call fewbody! */
 	if (isbinbin) {
 		retval = binbin(&t, k, kp, W, bmax, &hier, rng);
 	} else {
 		retval = binsingle(&t, ksin, kbin, W, bmax, &hier, rng);
 	}
+
+	fprintf(stderr, "ping8");
 
 	/* set up axes */
 	wp = sqrt(sqr(w[1]) + sqr(w[2]));
@@ -1485,6 +1507,8 @@ void binint_do(long k, long kp, double rperi, double w[4], double W, double rcm,
         double vesc;
         vesc = sqrt(-2*star_phi[g_k]) * (units.l/units.t) / 1.0e5;
 
+	fprintf(stderr, "ping9");
+
 	/* logging */
 	binint_log_status(retval,vesc);
 	printing_units.v = cmc_units.v * units.l / units.t;
@@ -1492,6 +1516,9 @@ void binint_do(long k, long kp, double rperi, double w[4], double W, double rcm,
 	printing_units.t = cmc_units.t * units.t;
 	printing_units.m = cmc_units.m * units.m;
 	printing_units.E = cmc_units.E * units.E;
+
+
+	fprintf(stderr, "ping10");
 
 	/* now do something with the Fewbody result */
 	if ( !( (fabs(retval.DeltaEfrac) < 1.0e-3 || fabs(retval.DeltaE) < 1.0e-3) && 
@@ -1513,8 +1540,12 @@ void binint_do(long k, long kp, double rperi, double w[4], double W, double rcm,
 		parafprintf(binintfile, "outcome: error\n");
 		print_interaction_error();
 	} else {
+
+		fprintf(stderr, "ping11");
 		parafprintf(binintfile, "outcome: %s (%s)\n", fb_sprint_hier(hier, string1), fb_sprint_hier_hr(hier, string2));
 		
+
+		fprintf(stderr, "ping12");
 		for (i=0; i<hier.nobj; i++) {
 			/* logging */
 			parafprintf(binintfile, "output: ");
@@ -2162,6 +2193,9 @@ void binint_do(long k, long kp, double rperi, double w[4], double W, double rcm,
 			}
 		}
 		
+		fprintf(stderr, "ACF STAR REMOVED ping50 index=%ld id=%ld\n", k, star[k].id);
+		fprintf(stderr, "ACF STAR REMOVED ping51 index=%ld id=%ld\n", kp, star[kp].id);
+
 		/* destroy two progenitors */
 		destroy_obj(k);
 		destroy_obj(kp);
@@ -2412,6 +2446,8 @@ void break_wide_binaries(struct rng_t113_state* rng_st)
 				knewp = create_star(k, 0);
 				cp_binmemb_to_star(k, 0, knew);
 				cp_binmemb_to_star(k, 1, knewp);
+
+				fprintf(stderr, "ACF STAR REMOVED because the binary split into two index=%ld id=%ld\n", k, star[k].id);
 				
 				/* destroy this binary */
 				destroy_obj(k);

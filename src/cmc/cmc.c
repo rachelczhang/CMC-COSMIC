@@ -398,12 +398,12 @@ int main(int argc, char *argv[])
 
 		update_tspent(tmsbufref);
 
-		if(CheckCheckpoint())
-			save_restart_file();
+		// if(CheckCheckpoint())
+			// save_restart_file();
 
 	} /* End time step iteration loop */
 
-	save_restart_file();
+	// save_restart_file();
 
 	times(&tmsbuf);
 	t_full = MPI_Wtime() - tmpTimeStart_full;

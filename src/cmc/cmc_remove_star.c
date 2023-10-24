@@ -84,6 +84,7 @@ int remove_old_star(double time, long k)
 			left_single_mass = star_m[get_global_idx(knew)];
 			
 			/* destroy this binary */
+			fprintf(stderr, "ACF STAR REMOVED ping7 index=%ld id=%ld\n", k, star[k].id);
 			destroy_obj(k);
 			/*destroy_obj(knew);*/
 
@@ -164,6 +165,7 @@ int remove_old_star(double time, long k)
 
 			//debug stuff
 			//destroy_obj(star[k].binind);
+			fprintf(stderr, "ACF STAR REMOVED ping8 index=%ld id=%ld\n", k, star[k].id);
 			destroy_obj(k);
 			
 			/*Now print all that stuff in the removed star log file*/
@@ -194,6 +196,7 @@ int remove_old_star(double time, long k)
 			DMrejuv+= star_m[get_global_idx(k)] * madhoc; //Storing DMrejuv in Nbody units since comparing with mtotal later
 			birth_time = star[k].createtime;
 			life_time = star[k].lifetime;
+			fprintf(stderr, "ACF STAR REMOVED ping9 index=%ld id=%ld\n", k, star[k].id);
 			destroy_obj(k);
 			fprintf (removestarfile, "single_destroyed: %g %ld %g %g %g %g\n",
 					time,

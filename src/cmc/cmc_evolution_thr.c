@@ -537,7 +537,7 @@ void tidally_strip_stars(void) {
 					dprintf ("before SE: id=%ld k=%ld kw=%d m=%g mt=%g R=%g L=%g mc=%g rc=%g menv=%g renv=%g ospin=%g epoch=%g tms=%g tphys=%g phi=%g r=%g\n",
 							star[i].id,i,star[i].se_k,star[i].se_mass,star[i].se_mt,star[i].se_radius,star[i].se_lum,star[i].se_mc,star[i].se_rc,
 							star[i].se_menv,star[i].se_renv,star[i].se_ospin,star[i].se_epoch,star[i].se_tms,star[i].se_tphys, phi, r);
-
+					fprintf(stderr, "ACF STAR REMOVED ping1 index=%ld id=%ld\n", i, star[i].id);
 					destroy_obj(i);
 				}
 			}
@@ -603,6 +603,7 @@ void tidally_strip_stars(void) {
 
 					/* perhaps this will fix the problem wherein stars are ejected (and counted)
 					   multiple times */
+					fprintf(stderr, "ACF STAR REMOVED ping2 index=%ld id=%ld\n", i, star[i].id);
 					destroy_obj(i);
 				}
 			}
@@ -710,6 +711,7 @@ void remove_star(long j, double phi_rtidal, double phi_zero) {
 
 	/* perhaps this will fix the problem wherein stars are ejected (and counted)
 	   multiple times */
+	fprintf(stderr, "ACF STAR REMOVED ping3 index=%ld id=%ld\n", j, star[j].id);
 	destroy_obj(j);
 }
 
@@ -814,7 +816,8 @@ void get_positions_loop(struct get_pos_str *get_pos_dat){
 		/* note that energy lost due to stellar evolution is subtracted
 		   at the time of mass loss in DoStellarEvolution */
 		if (star_m[g_j] < ZERO) {
-			dprintf("id = %d\tindex of stripped star by mass = %ld\tE = %g\tm=%g\tr=%g\tvr=%g\tvt=%g\n",myid, j,star[j].E,star_m[g_j],star_r[g_j],star[j].vr,star[j].vt);
+			fprintf(stderr, "id = %d\tindex of stripped star by mass = %ld\tE = %g\tm=%g\tr=%g\tvr=%g\tvt=%g\n",myid, j,star[j].E,star_m[g_j],star_r[g_j],star[j].vr,star[j].vt);
+			fprintf(stderr, "ACF STAR REMOVED MASSLESS ping4 index=%ld id=%ld\n", j, star[j].id);
 			destroy_obj(j);
 			continue;
 		}
@@ -822,8 +825,9 @@ void get_positions_loop(struct get_pos_str *get_pos_dat){
 		/* remove unbound stars */
 		if (E >= 0.0) {
 		/*	dprintf("tidally stripping star with E >= 0: i=%ld id=%ld m=%g E=%g binind=%ld\n", j, star[j].id, star[j].m, star[j].E, star[j].binind); */
-			dprintf("index of stripped star by energy = %ld\tE = %g\tm=%g\tr=%g\tvr=%g\tvt=%g\n",j,star[j].E,star_m[g_j],star_r[g_j],star[j].vr,star[j].vt);
+			dprintf("index of stripped star by energy = %ld\tE = %g\tm=%g\tr=%g\tvr=%g\tvt=%g\tid=%ld\n",j,star[j].E,star_m[g_j],star_r[g_j],star[j].vr,star[j].vt,star[j].id);
 			count_esc_bhs(j);
+			fprintf(stderr, "ACF STAR REMOVED because unbound index of stripped star by energy = %ld\tE = %g\tm=%g\tr=%g\tvr=%g\tvt=%g\tid=%ld\n",j,star[j].E,star_m[g_j],star_r[g_j],star[j].vr,star[j].vt,star[j].id);
 			remove_star(j, phi_rtidal, phi_zero);
 			continue;
 		}
@@ -850,6 +854,7 @@ void get_positions_loop(struct get_pos_str *get_pos_dat){
 			dprintf("tidally stripping star with rmax >= Rtidal: i=%ld id=%ld m=%g E=%g binind=%ld\n", g_j, star[j].id, star_m[g_j], star[j].E, star[j].binind);
 			star[j].r_apo= rmax;
 			star[j].r_peri= rmin;
+			fprintf(stderr, "ACF STAR REMOVED because tidally stripping star with rmax >= Rtidal: i=%ld id=%ld m=%g E=%g binind=%ld\n", g_j, star[j].id, star_m[g_j], star[j].E, star[j].binind);
 			remove_star(j, phi_rtidal, phi_zero);
 			continue;
 		}
@@ -910,7 +915,9 @@ void get_positions_loop(struct get_pos_str *get_pos_dat){
 			cenma.E += (2.0*star_phi[g_j] + star[j].vr * star[j].vr + star[j].vt * star[j].vt) / 
 				2.0 * star_m[g_j] * madhoc;
 			//Reduction?? For now it is ok, since if(0) never runs :)
+			fprintf(stderr, "ACF STAR REMOVED ping5 index=%ld id=%ld\n", j, star[j].id);
 			destroy_obj(j);
+			
 			MINIMUM_R = 2.0 * FB_CONST_G * cenma.m * units.mstar / fb_sqr(FB_CONST_C) / units.l;
 			continue;
 		}

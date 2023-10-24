@@ -419,14 +419,15 @@ are skipped if they already interacted in 3bb loop!  */
 			/* do encounter */
 			if (star[k].binind > 0 && star[kp].binind > 0) {
 				/* binary--binary */
-				print_interaction_status("BB");
-				binint_do(k, kp, rperi, w, W, rcm, vcm, rng);
+				print_interaction_status("BBTEST");
+				// binint_do(k, kp, rperi, w, W, rcm, vcm, rng);
+				fprintf(stderr, "DONE WITH BB");
 				/* parafprintf(collisionfile, "BB %g %g\n", TotalTime, rcm); */
 			} else if (star[k].binind > 0 || star[kp].binind > 0) {
 				/* binary--single */
 				print_interaction_status("BS");
 
-				binint_do(k, kp, rperi, w, W, rcm, vcm, rng);
+				// binint_do(k, kp, rperi, w, W, rcm, vcm, rng);
 				/* parafprintf(collisionfile, "BS %g %g\n", TotalTime, rcm); */
 			} else {
 				/* single--single */
