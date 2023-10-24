@@ -297,9 +297,12 @@ double get_Tbs(central_t central) {
   double Tbs;
   /* X defines pericenter needed for "strong" interaction: r_p = X a */
   if (central.N_bin != 0 && central.N_sin != 0) {
-    Tbs = 1.0 / (4.0 * sqrt(PI) * central.n_sin * sqr(XBS) * (central.v_rms/sqrt(3.0)) * central.a2_ave * 
+    /* Tbs = 1.0 / (4.0 * sqrt(PI) * central.n_sin * sqr(XBS) * (central.v_rms/sqrt(3.0)) * central.a2_ave * 
         (1.0 + central.m_ave*central.a_ave/(XBS*sqr(central.v_rms/sqrt(3.0))*central.a2_ave))) * 
-      log(GAMMA * ((double) clus.N_STAR)) / ((double) clus.N_STAR);
+      log(GAMMA * ((double) clus.N_STAR)) / ((double) clus.N_STAR); */
+	Tbs = 1.0 / (4.0 * sqrt(PI) * central.n_sin * sqr(XBS) * (central.v_rms/sqrt(3.0)) * central.mae2_ave *
+	    (1.0 + central.m_ave*central.mae_ave/(XBS*sqr(central.v_rms/sqrt(3.0))*central.mae2_ave))) *
+	   log(GAMMA * ((double) clus.N_STAR)) / ((double) clus.N_STAR);
   } else {
     Tbs = GSL_POSINF;
   }

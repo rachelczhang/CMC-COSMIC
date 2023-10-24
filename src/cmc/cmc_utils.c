@@ -1345,6 +1345,44 @@ void central_calculate(void)
 	/* core relaxation time, Spitzer (1987) eq. (2-62) */
 	Trc = 0.065 * cub(central.v_rms) / (central.rho * central.m_ave);
 
+	/* Rachel: calculate max values to use in tiemstep calculations */
+	central.m_sin_max = 0.0;
+	central.m_bin_max = 0.0;
+
+	for (i=1; i<=MIN(NUM_CENTRAL_STARS, clus.N_STAR); i++) {
+		
+		if(NUM_CENTRAL_STARS > End[0] - Start[0]) 
+		{
+			eprintf("Central stars dont fit in root node!\n");
+			MPI_Abort(MPI_COMM_WORLD, -1);
+		}
+
+		if(myid==0)
+		{
+			Ncentral++;
+
+			j = get_global_idx(i);
+
+			if (star[i].binind == 0) {
+				central.m_sin_max = MAX(central.m_sin_max, star_m[j] / ((double) clus.N_STAR));
+			} else {
+				central.m_bin_max = MAX(central.m_bin_max, star_m[j] / ((double) clus.N_STAR));
+			}
+		}
+	}
+
+	/* Rachel: pass max info to other nodes outside of root node, copied from below */
+	tmpTimeStart = timeStartSimple();
+	double *buf_bcast_dbl_max = (double*) malloc(2 * sizeof(double));
+	buf_bcast_dbl_max[0] = central.m_sin_max;
+	buf_bcast_dbl_max[1] = central.m_bin_max;
+
+	MPI_Bcast( buf_bcast_dbl_max, 2, MPI_DOUBLE, 0, MPI_COMM_WORLD );
+
+	central.m_sin_max = buf_bcast_dbl_max[0];
+	central.m_bin_max = buf_bcast_dbl_max[1];
+
+	free(buf_bcast_dbl_max);
 
 	/* calculate other quantities using old method */
 	Ncentral = 0;
@@ -1360,8 +1398,8 @@ void central_calculate(void)
 	central.a_ave = 0.0;
 	central.a2_ave = 0.0;
 	central.ma_ave = 0.0;
-	central.m_sin_max = 0.0;
-	central.m_bin_max = 0.0;
+	central.mae_ave = 0.0;
+	central.mae2_ave = 0.0;
 
 		//MPI: In the case when the central stars dont all lie in the root node, this just cant be done only by the root node. But assuming that case will never happen, we'll just throw an error for such cases.
 	for (i=1; i<=MIN(NUM_CENTRAL_STARS, clus.N_STAR); i++) {
@@ -1384,18 +1422,18 @@ void central_calculate(void)
 			if (star[i].binind == 0) {
 				central.N_sin++;
 				Msincentral += star_m[j] / ((double) clus.N_STAR);
-				central.m_sin_max = MAX(central.m_sin_max, star_m[j] / ((double) clus.N_STAR));
 				central.v_sin_rms += sqr(star[i].vr) + sqr(star[i].vt);
 				central.R2_ave += sqr(star[i].rad);
 				central.mR_ave += star_m[j] / ((double) clus.N_STAR) * star[i].rad;
 			} else {
 				central.N_bin++;
 				Mbincentral += star_m[j] / ((double) clus.N_STAR);
-				central.m_bin_max = MAX(central.m_bin_max, star_m[j] / ((double) clus.N_STAR));
 				central.v_bin_rms += sqr(star[i].vr) + sqr(star[i].vt);
 				central.a_ave += binary[star[i].binind].a;
 				central.a2_ave += sqr(binary[star[i].binind].a);
 				central.ma_ave += star_m[j] / ((double) clus.N_STAR) * binary[star[i].binind].a;
+				central.mae_ave += (1+binary[star[i].binind].e) * binary[star[i].binind].a * pow((1+(central.m_sin_max/(star_m[j] / ((double) clus.N_STAR)))), (1.0/3));
+				central.mae2_ave += sqr(1+binary[star[i].binind].e) * sqr(binary[star[i].binind].a) * sqr(pow((1+(central.m_sin_max/(star_m[j] / ((double) clus.N_STAR)))), (1.0/3)));
 			}
 		}
 	}
@@ -1413,8 +1451,8 @@ void central_calculate(void)
 	buf_bcast_dbl[7] = central.v_sin_rms;
 	buf_bcast_dbl[8] = central.v_bin_rms;
 	buf_bcast_dbl[9] = central.R2_ave;
-	buf_bcast_dbl[10] = central.m_sin_max;
-	buf_bcast_dbl[11] = central.m_bin_max;
+	buf_bcast_dbl[10] = central.mae_ave;
+	buf_bcast_dbl[11] = central.mae2_ave;
 
 	MPI_Bcast( buf_bcast_dbl, 12, MPI_DOUBLE, 0, MPI_COMM_WORLD );
 
@@ -1428,8 +1466,8 @@ void central_calculate(void)
 	central.v_sin_rms = buf_bcast_dbl[7];
 	central.v_bin_rms = buf_bcast_dbl[8];
 	central.R2_ave = buf_bcast_dbl[9];
-	central.m_sin_max = buf_bcast_dbl[10];
-	central.m_bin_max = buf_bcast_dbl[11];
+	central.mae_ave = buf_bcast_dbl[10];
+	central.mae2_ave = buf_bcast_dbl[11];
 
 	free(buf_bcast_dbl); 
 
@@ -1476,12 +1514,16 @@ void central_calculate(void)
 		central.a_ave /= ((double) central.N_bin);
 		central.a2_ave /= ((double) central.N_bin);
 		central.ma_ave /= ((double) central.N_bin);
+		central.mae_ave /= ((double) central.N_bin);
+		central.mae2_ave /= ((double) central.N_bin);
 	} else {
 		central.m_bin_ave = 0.0;
 		central.v_bin_rms = 0.0;
 		central.a_ave = 0.0;
 		central.a2_ave = 0.0;
 		central.ma_ave = 0.0;
+		central.mae_ave = 0.0;
+		central.mae2_ave = 0.0;
 	}
 
 

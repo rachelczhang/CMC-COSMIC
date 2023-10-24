@@ -276,7 +276,8 @@ are skipped if they already interacted in 3bb loop!  */
 			}
 
 			/* binary--single cross section */
-			rperi = XBS * binary[star[kbin].binind].a;
+			/* rperi = XBS * binary[star[kbin].binind].a; */
+			rperi = XBS * (1+binary[star[kbin].binind].e) * pow(((binary[star[kbin].binind].bse_mass[0] + binary[star[kbin].binind].bse_mass[1]) + star_m[get_global_idx(ksin)]) / ((binary[star[kbin].binind].bse_mass[0] + binary[star[kbin].binind].bse_mass[1])), (1.0/3)) * binary[star[kbin].binind].a;
 
 			if (BINSINGLE) {
 				S = PI * sqr(rperi) * (1.0 + 2.0*madhoc*(mass_k+mass_kp)/(rperi*sqr(W)));

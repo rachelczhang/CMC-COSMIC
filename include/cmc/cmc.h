@@ -80,7 +80,7 @@
 #define XCOLLTC 4.0 /* tidal capture */
 #define XCOLLSS 1.5 /* simple sticky spheres */
 /* rperi = XBS * a */
-#define XBS 2.0
+#define XBS 2.1
 /* rperi = XBB * (a_1 + a_2) */
 #define XBB 2.0
 /* hard soft boundary XHS=vorb/W */
@@ -1566,6 +1566,14 @@ typedef struct{
 * @brief  maximum binary star mass
 */
 	double m_bin_max;
+/**
+* @brief  average of a(1+e)(1+max single mass/binary mass)^(1/3)
+*/
+	double mae_ave;
+/**
+* @brief  average of (a(1+e)(1+max single mass/binary mass)^(1/3))^2
+*/
+	double mae2_ave;
 
 } central_t;
 
