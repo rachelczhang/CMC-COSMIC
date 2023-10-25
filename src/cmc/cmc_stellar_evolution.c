@@ -1225,7 +1225,15 @@ void handle_bse_outcome(long k, long kb, double *vs, double tphysf, int kprev0, 
     /* both stars gone */
     //dprintf("binary disrupted via BSE with no stars intact\n");
 
-		fprintf(stderr, "ACF STAR REMOVED ping44 index=%ld id=%ld\n", k, star[k].id);
+		fprintf(stderr, "ACF STAR REMOVED ping44 NEW index=%ld id=%ld\n", k, star[k].id);
+
+    parafprintf(masslessremnantsfile, "t=%.18g id=%ld id1=%ld id2=%ld\n",
+      TotalTime,
+      star[k].id,
+      binary[kb].id1,
+      binary[kb].id2
+    );
+
     destroy_obj(k);
   } else {
     dprintf("unhandled binary outcome!\n");
