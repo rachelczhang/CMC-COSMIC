@@ -82,7 +82,7 @@
 /* rperi = XBS * a */
 #define XBS 2.1
 /* rperi = XBB * (a_1 + a_2) */
-#define XBB 2.0
+#define XBB 2.1
 /* hard soft boundary XHS=vorb/W */
 #define XHS 0.7
 /* safety factor used in the black hole accretion routine */
@@ -1567,13 +1567,25 @@ typedef struct{
 */
 	double m_bin_max;
 /**
-* @brief  average of a(1+e)(1+max single mass/binary mass)^(1/3)
+* @brief  average of a(1+e)(1+max single mass/binary mass)^(1/3), mass expression = Hills factor
 */
-	double mae_ave;
+	double aehills_sin_ave;
 /**
 * @brief  average of (a(1+e)(1+max single mass/binary mass)^(1/3))^2
 */
-	double mae2_ave;
+	double aehills2_sin_ave;
+/**
+* @brief  average of a(1+e)(1+max binary1 mass/binary2 mass)^(1/3)
+*/
+	double aehills_bin_ave;
+/**
+* @brief  average of (a(1+e)(1+max binary1 mass/binary2 mass)^(1/3))^2
+*/
+	double aehills2_bin_ave;
+/**
+* @brief  average of m(a(1+e)(1+max binary1 mass/binary2 mass)^(1/3))^2
+*/
+	double maehills_bin_ave;
 
 } central_t;
 

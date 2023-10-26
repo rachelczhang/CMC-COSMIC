@@ -1398,8 +1398,11 @@ void central_calculate(void)
 	central.a_ave = 0.0;
 	central.a2_ave = 0.0;
 	central.ma_ave = 0.0;
-	central.mae_ave = 0.0;
-	central.mae2_ave = 0.0;
+	central.aehills_sin_ave = 0.0;
+	central.aehills2_sin_ave = 0.0;
+	central.aehills_bin_ave = 0.0;
+	central.aehills2_bin_ave = 0.0;
+	central.maehills_bin_ave = 0.0;
 
 		//MPI: In the case when the central stars dont all lie in the root node, this just cant be done only by the root node. But assuming that case will never happen, we'll just throw an error for such cases.
 	for (i=1; i<=MIN(NUM_CENTRAL_STARS, clus.N_STAR); i++) {
@@ -1432,15 +1435,18 @@ void central_calculate(void)
 				central.a_ave += binary[star[i].binind].a;
 				central.a2_ave += sqr(binary[star[i].binind].a);
 				central.ma_ave += star_m[j] / ((double) clus.N_STAR) * binary[star[i].binind].a;
-				central.mae_ave += (1+binary[star[i].binind].e) * binary[star[i].binind].a * pow((1+(central.m_sin_max/(star_m[j] / ((double) clus.N_STAR)))), (1.0/3));
-				central.mae2_ave += sqr(1+binary[star[i].binind].e) * sqr(binary[star[i].binind].a) * sqr(pow((1+(central.m_sin_max/(star_m[j] / ((double) clus.N_STAR)))), (1.0/3)));
+				central.aehills_sin_ave += (1+binary[star[i].binind].e) * binary[star[i].binind].a * pow((1+(central.m_sin_max/(star_m[j] / ((double) clus.N_STAR)))), (1.0/3));
+				central.aehills2_sin_ave += sqr(1+binary[star[i].binind].e) * sqr(binary[star[i].binind].a) * sqr(pow((1+(central.m_sin_max/(star_m[j] / ((double) clus.N_STAR)))), (1.0/3)));
+				central.aehills_bin_ave += (1+binary[star[i].binind].e) * binary[star[i].binind].a * pow((1+(central.m_bin_max/(star_m[j] / ((double) clus.N_STAR)))), (1.0/3));
+				central.aehills2_bin_ave += sqr(1+binary[star[i].binind].e) * sqr(binary[star[i].binind].a) * sqr(pow((1+(central.m_bin_max/(star_m[j] / ((double) clus.N_STAR)))), (1.0/3)));
+				central.maehills_bin_ave += star_m[j] / ((double) clus.N_STAR) * (1+binary[star[i].binind].e) * binary[star[i].binind].a * pow((1+(central.m_bin_max/(star_m[j] / ((double) clus.N_STAR)))), (1.0/3));
 			}
 		}
 	}
 
 	tmpTimeStart = timeStartSimple();
 	//MPI: Packing into array to optimize communication.
-	double *buf_bcast_dbl = (double*) malloc(12 * sizeof(double));
+	double *buf_bcast_dbl = (double*) malloc(15 * sizeof(double));
 	buf_bcast_dbl[0] = central.w2_ave;
 	buf_bcast_dbl[1] = Msincentral;
 	buf_bcast_dbl[2] = central.mR_ave;
@@ -1451,10 +1457,13 @@ void central_calculate(void)
 	buf_bcast_dbl[7] = central.v_sin_rms;
 	buf_bcast_dbl[8] = central.v_bin_rms;
 	buf_bcast_dbl[9] = central.R2_ave;
-	buf_bcast_dbl[10] = central.mae_ave;
-	buf_bcast_dbl[11] = central.mae2_ave;
+	buf_bcast_dbl[10] = central.aehills_sin_ave;
+	buf_bcast_dbl[11] = central.aehills2_sin_ave;
+	buf_bcast_dbl[12] = central.aehills_bin_ave;
+	buf_bcast_dbl[13] = central.aehills2_bin_ave;
+	buf_bcast_dbl[14] = central.maehills_bin_ave;
 
-	MPI_Bcast( buf_bcast_dbl, 12, MPI_DOUBLE, 0, MPI_COMM_WORLD );
+	MPI_Bcast( buf_bcast_dbl, 15, MPI_DOUBLE, 0, MPI_COMM_WORLD );
 
 	central.w2_ave = buf_bcast_dbl[0];
 	Msincentral = buf_bcast_dbl[1];
@@ -1466,8 +1475,11 @@ void central_calculate(void)
 	central.v_sin_rms = buf_bcast_dbl[7];
 	central.v_bin_rms = buf_bcast_dbl[8];
 	central.R2_ave = buf_bcast_dbl[9];
-	central.mae_ave = buf_bcast_dbl[10];
-	central.mae2_ave = buf_bcast_dbl[11];
+	central.aehills_sin_ave = buf_bcast_dbl[10];
+	central.aehills2_sin_ave = buf_bcast_dbl[11];
+	central.aehills_bin_ave = buf_bcast_dbl[12];
+	central.aehills2_bin_ave = buf_bcast_dbl[13];
+	central.maehills_bin_ave = buf_bcast_dbl[14];
 
 	free(buf_bcast_dbl); 
 
@@ -1514,16 +1526,22 @@ void central_calculate(void)
 		central.a_ave /= ((double) central.N_bin);
 		central.a2_ave /= ((double) central.N_bin);
 		central.ma_ave /= ((double) central.N_bin);
-		central.mae_ave /= ((double) central.N_bin);
-		central.mae2_ave /= ((double) central.N_bin);
+		central.aehills_sin_ave /= ((double) central.N_bin);
+		central.aehills2_sin_ave /= ((double) central.N_bin);
+		central.aehills_bin_ave /= ((double) central.N_bin);
+		central.aehills2_bin_ave /= ((double) central.N_bin);
+		central.maehills_bin_ave /= ((double) central.N_bin);
 	} else {
 		central.m_bin_ave = 0.0;
 		central.v_bin_rms = 0.0;
 		central.a_ave = 0.0;
 		central.a2_ave = 0.0;
 		central.ma_ave = 0.0;
-		central.mae_ave = 0.0;
-		central.mae2_ave = 0.0;
+		central.aehills_sin_ave = 0.0;
+		central.aehills2_sin_ave = 0.0;
+		central.aehills_bin_ave = 0.0;
+		central.aehills2_bin_ave = 0.0;
+		central.maehills_bin_ave = 0.0;
 	}
 
 

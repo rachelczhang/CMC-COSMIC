@@ -259,7 +259,8 @@ are skipped if they already interacted in 3bb loop!  */
 	
 		if (star[k].binind > 0 && star[kp].binind > 0) {
 			/* binary--binary cross section */
-			rperi = XBB * (binary[star[k].binind].a + binary[star[kp].binind].a);
+			/* rperi = XBB * (binary[star[k].binind].a + binary[star[kp].binind].a); */
+			rperi = XBB * ((binary[star[k].binind].a*(1+binary[star[k].binind].e)*pow((1+(binary[star[kp].binind].bse_mass[0] + binary[star[kp].binind].bse_mass[1])/(binary[star[k].binind].bse_mass[0] + binary[star[k].binind].bse_mass[1])), (1.0/3))) + (binary[star[kp].binind].a*(1+binary[star[kp].binind].e)*pow((1+(binary[star[k].binind].bse_mass[0] + binary[star[k].binind].bse_mass[1])/(binary[star[kp].binind].bse_mass[0] + binary[star[kp].binind].bse_mass[1])), (1.0/3))));
 
 			if (BINBIN) {
 				S = PI * sqr(rperi) * (1.0 + 2.0*madhoc*(mass_k+mass_kp)/(rperi*sqr(W)));

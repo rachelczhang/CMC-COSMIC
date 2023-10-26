@@ -277,9 +277,12 @@ double get_Tbb(central_t central) {
   double Tbb;
   /* X defines pericenter needed for "strong" interaction: r_p = X (a_1+a_2) */	
   if (central.N_bin != 0) {
-    Tbb = 1.0 / (16.0 * sqrt(PI) * central.n_bin * sqr(XBB) * (central.v_bin_rms/sqrt(3.0)) * central.a2_ave * 
+    /* Tbb = 1.0 / (16.0 * sqrt(PI) * central.n_bin * sqr(XBB) * (central.v_bin_rms/sqrt(3.0)) * central.a2_ave * 
         (1.0 + central.ma_ave/(2.0*XBB*sqr(central.v_bin_rms/sqrt(3.0))*central.a2_ave))) * 
-      log(GAMMA * ((double) clus.N_STAR)) / ((double) clus.N_STAR);
+      log(GAMMA * ((double) clus.N_STAR)) / ((double) clus.N_STAR); */
+	Tbb = 1.0 / (16.0 * sqrt(PI) * central.n_bin * sqr(XBB) * (central.v_bin_rms/sqrt(3.0)) * central.aehills2_bin_ave * 
+	    (1.0 + central.maehills_bin_ave/(2.0*XBB*sqrt(central.v_bin_rms/sqrt(3.0))*central.aehills2_bin_ave))) * 
+	  log(GAMMA * ((double) clus.N_STAR)) / ((double) clus.N_STAR);
   } else {
     Tbb = GSL_POSINF;
   }
@@ -300,8 +303,8 @@ double get_Tbs(central_t central) {
     /* Tbs = 1.0 / (4.0 * sqrt(PI) * central.n_sin * sqr(XBS) * (central.v_rms/sqrt(3.0)) * central.a2_ave * 
         (1.0 + central.m_ave*central.a_ave/(XBS*sqr(central.v_rms/sqrt(3.0))*central.a2_ave))) * 
       log(GAMMA * ((double) clus.N_STAR)) / ((double) clus.N_STAR); */
-	Tbs = 1.0 / (4.0 * sqrt(PI) * central.n_sin * sqr(XBS) * (central.v_rms/sqrt(3.0)) * central.mae2_ave *
-	    (1.0 + central.m_ave*central.mae_ave/(XBS*sqr(central.v_rms/sqrt(3.0))*central.mae2_ave))) *
+	Tbs = 1.0 / (4.0 * sqrt(PI) * central.n_sin * sqr(XBS) * (central.v_rms/sqrt(3.0)) * central.aehills2_sin_ave *
+	    (1.0 + central.m_ave*central.aehills_sin_ave/(XBS*sqr(central.v_rms/sqrt(3.0))*central.aehills2_sin_ave))) *
 	   log(GAMMA * ((double) clus.N_STAR)) / ((double) clus.N_STAR);
   } else {
     Tbs = GSL_POSINF;
