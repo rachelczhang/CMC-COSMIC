@@ -80,9 +80,9 @@
 #define XCOLLTC 4.0 /* tidal capture */
 #define XCOLLSS 1.5 /* simple sticky spheres */
 /* rperi = XBS * a */
-#define XBS 5.0
+#define XBS 3.0
 /* rperi = XBB * (a_1 + a_2) */
-#define XBB 5.0
+#define XBB 3.0
 /* hard soft boundary XHS=vorb/W */
 #define XHS 0.7
 /* safety factor used in the black hole accretion routine */
